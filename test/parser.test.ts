@@ -1,9 +1,48 @@
-import { JSONStringParser } from '../src'
+import * as assert from 'assert'
+import * as E from 'fp-ts/lib/Either'
+
+import {
+  JSONBooleanParser,
+  JSONNullParser,
+  JSONNumberParser,
+  JSONStringParser
+} from '../src'
 import { runParser } from '../src/utils'
 
 describe('parser', () => {
-  it('it works', () => {
-    const res = runParser(JSONStringParser, '"hello world***"')
-    console.log(res)
+  it('JSONStringParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONStringParser, '"hello world"'),
+      E.right({ _tag: 'string', value: 'hello world' })
+    )
+  })
+  it('JSONNumberParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONNumberParser, '12'),
+      E.right({ _tag: 'number', value: 12 })
+    )
+    assert.deepStrictEqual(
+      runParser(JSONNumberParser, '12.32'),
+      E.right({
+        _tag: 'number',
+        value: 12.32
+      })
+    )
+  })
+  it('JSONNullParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONNullParser, 'null'),
+      E.right({ _tag: 'null' })
+    )
+  })
+  it('JSONBooleanParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONBooleanParser, 'true'),
+      E.right({ _tag: 'boolean', value: true })
+    )
+    assert.deepStrictEqual(
+      runParser(JSONBooleanParser, 'false'),
+      E.right({ _tag: 'boolean', value: false })
+    )
   })
 })

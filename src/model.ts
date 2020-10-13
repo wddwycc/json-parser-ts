@@ -28,4 +28,11 @@ export type JSONNull = {
   _tag: 'null'
 }
 
+export type JSONValue =
+  | JSONObject
+  | JSONArray
+  | JSONString
+  | JSONNumber
+  | JSONBoolean
+  | JSONNull
 export type JSON = JSONObject | JSONArray
