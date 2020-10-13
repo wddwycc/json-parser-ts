@@ -2,9 +2,7 @@ import { JSONValue } from './model'
 import { JSONParser } from './parsers'
 import { runParser } from './utils'
 
-export const parse = (src: string) => {
-  runParser(JSONParser, src)
-}
+export const parse = (src: string) => runParser(JSONParser, src)
 
 export const flatten = (
   src: JSONValue
