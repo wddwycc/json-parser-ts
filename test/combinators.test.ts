@@ -11,7 +11,7 @@ import {
 } from '../src/parsers'
 import { runParser } from '../src/utils'
 
-describe('Parsers', () => {
+describe('', () => {
   it('JSONStringParser', () => {
     assert.deepStrictEqual(
       runParser(JSONStringParser, '"hello world"'),
@@ -52,8 +52,12 @@ describe('Parsers', () => {
       runParser(JSONObjectParser, '{\n "a": "b" \n}'),
       E.right({
         _tag: 'object',
-        key: 'a',
-        value: { _tag: 'string', value: 'b' }
+        value: [
+          {
+            key: 'a',
+            value: { _tag: 'string', value: 'b' }
+          }
+        ]
       })
     )
   })

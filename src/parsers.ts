@@ -66,20 +66,23 @@ export const JSONObjectParser = pipe(
   P.apFirst(C.char('{')),
   P.apFirst(Trimmer),
   P.apSecond(
-    pipe(
-      JSONStringParser,
-      P.map(a => a.value)
+    P.sepBy(
+      pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
+      pipe(
+        JSONStringParser,
+        P.map(a => a.value),
+        P.bindTo('key'),
+        P.apFirst(Trimmer),
+        P.apFirst(C.char(':')),
+        P.apFirst(Trimmer),
+        P.bind('value', () => JSONValueParser)
+      )
     )
   ),
-  P.bindTo('key'),
-  P.apFirst(Trimmer),
-  P.apFirst(C.char(':')),
-  P.apFirst(Trimmer),
-  P.bind('value', () => JSONValueParser),
   P.apFirst(Trimmer),
   P.apFirst(C.char('}')),
   P.apFirst(Trimmer),
-  P.map((data): JSONObject => ({ _tag: 'object', ...data }))
+  P.map((data): JSONObject => ({ _tag: 'object', value: data }))
 )
 
 export const JSONArrayParser = pipe(

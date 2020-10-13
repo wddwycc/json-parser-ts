@@ -1,6 +1,10 @@
 import { JSONValue } from './model'
 import { JSONParser } from './parsers'
 import { runParser } from './utils'
+import * as NEA from 'fp-ts/lib/NonEmptyArray'
+import * as O from 'fp-ts/lib/Option'
+import * as R from 'fp-ts/lib/Record'
+import { flow, pipe } from 'fp-ts/lib/function'
 
 export const parse = (src: string) => runParser(JSONParser, src)
 
@@ -17,7 +21,18 @@ export const flatten = (
     case 'null':
       return null
     case 'object':
-      return { [src.key]: flatten(src.value) }
+      return pipe(
+        src.value,
+        NEA.fromArray,
+        O.map(
+          flow(
+            NEA.groupBy(a => a.key),
+            R.map(NEA.head),
+            R.map(a => flatten(a.value))
+          )
+        ),
+        O.getOrElse(() => ({}))
+      )
     case 'array':
       return src.value.map(flatten)
   }

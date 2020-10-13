@@ -1,7 +1,9 @@
 export type JSONObject = {
   _tag: 'object'
-  key: string
-  value: JSONValue
+  value: {
+    key: string
+    value: JSONValue
+  }[]
 }
 
 export type JSONArray = {
