@@ -45,9 +45,9 @@ describe('Test interfaces', () => {
       A.map(jsonStr => {
         assert.deepStrictEqual(
           pipe(J.parse(jsonStr), E.map(J.flatten)),
-          E.right(JSON.parse(jsonStr))
+          E.right(JSON.parse(jsonStr)),
         )
-      })
+      }),
     )
   })
 })

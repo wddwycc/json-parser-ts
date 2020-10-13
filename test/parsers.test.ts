@@ -7,7 +7,7 @@ import {
   JSONNullParser,
   JSONNumberParser,
   JSONObjectParser,
-  JSONStringParser
+  JSONStringParser,
 } from '../src/parsers'
 import { runParser } from '../src/utils'
 
@@ -15,36 +15,36 @@ describe('Test parsers', () => {
   it('JSONStringParser', () => {
     assert.deepStrictEqual(
       runParser(JSONStringParser, '"hello world"'),
-      E.right({ _tag: 'string', value: 'hello world' })
+      E.right({ _tag: 'string', value: 'hello world' }),
     )
   })
   it('JSONNumberParser', () => {
     assert.deepStrictEqual(
       runParser(JSONNumberParser, '12'),
-      E.right({ _tag: 'number', value: 12 })
+      E.right({ _tag: 'number', value: 12 }),
     )
     assert.deepStrictEqual(
       runParser(JSONNumberParser, '12.32'),
       E.right({
         _tag: 'number',
-        value: 12.32
-      })
+        value: 12.32,
+      }),
     )
   })
   it('JSONBooleanParser', () => {
     assert.deepStrictEqual(
       runParser(JSONBooleanParser, 'true'),
-      E.right({ _tag: 'boolean', value: true })
+      E.right({ _tag: 'boolean', value: true }),
     )
     assert.deepStrictEqual(
       runParser(JSONBooleanParser, 'false'),
-      E.right({ _tag: 'boolean', value: false })
+      E.right({ _tag: 'boolean', value: false }),
     )
   })
   it('JSONNullParser', () => {
     assert.deepStrictEqual(
       runParser(JSONNullParser, 'null'),
-      E.right({ _tag: 'null' })
+      E.right({ _tag: 'null' }),
     )
   })
   it('JSONObjectParser', () => {
@@ -55,10 +55,10 @@ describe('Test parsers', () => {
         value: [
           {
             key: 'a',
-            value: { _tag: 'string', value: 'b' }
-          }
-        ]
-      })
+            value: { _tag: 'string', value: 'b' },
+          },
+        ],
+      }),
     )
   })
   it('JSONArrayParser', () => {
@@ -69,18 +69,18 @@ describe('Test parsers', () => {
         value: [
           {
             _tag: 'number',
-            value: 1
+            value: 1,
           },
           {
             _tag: 'number',
-            value: 2
+            value: 2,
           },
           {
             _tag: 'number',
-            value: 3
-          }
-        ]
-      })
+            value: 3,
+          },
+        ],
+      }),
     )
   })
 })
