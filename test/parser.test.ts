@@ -2,6 +2,7 @@ import * as assert from 'assert'
 import * as E from 'fp-ts/lib/Either'
 
 import {
+  JSONArrayParser,
   JSONBooleanParser,
   JSONNullParser,
   JSONNumberParser,
@@ -30,12 +31,6 @@ describe('parser', () => {
       })
     )
   })
-  it('JSONNullParser', () => {
-    assert.deepStrictEqual(
-      runParser(JSONNullParser, 'null'),
-      E.right({ _tag: 'null' })
-    )
-  })
   it('JSONBooleanParser', () => {
     assert.deepStrictEqual(
       runParser(JSONBooleanParser, 'true'),
@@ -46,6 +41,12 @@ describe('parser', () => {
       E.right({ _tag: 'boolean', value: false })
     )
   })
+  it('JSONNullParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONNullParser, 'null'),
+      E.right({ _tag: 'null' })
+    )
+  })
   it('JSONObjectParser', () => {
     assert.deepStrictEqual(
       runParser(JSONObjectParser, '{\n "a": "b" \n}'),
@@ -53,6 +54,28 @@ describe('parser', () => {
         _tag: 'object',
         key: 'a',
         value: { _tag: 'string', value: 'b' }
+      })
+    )
+  })
+  it('JSONArrayParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONArrayParser, '[1, 2,  3] '),
+      E.right({
+        _tag: 'array',
+        value: [
+          {
+            _tag: 'number',
+            value: 1
+          },
+          {
+            _tag: 'number',
+            value: 2
+          },
+          {
+            _tag: 'number',
+            value: 3
+          }
+        ]
       })
     )
   })

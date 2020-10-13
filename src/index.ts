@@ -1,7 +1,13 @@
 import { pipe } from 'fp-ts/lib/function'
 import { char as C, parser as P, string as S } from 'parser-ts'
 
-import { JSONNumber, JSONObject, JSONString, JSONValue } from './model'
+import {
+  JSONArray,
+  JSONNumber,
+  JSONObject,
+  JSONString,
+  JSONValue
+} from './model'
 
 /**
  * * Backspace is replaced with `\b`
@@ -95,6 +101,13 @@ export const JSONBooleanParser = pipe(
   P.map((value): JSONValue => ({ _tag: 'boolean', value }))
 )
 
+const Trimmer = C.many(
+  pipe(
+    C.space,
+    P.alt(() => C.char('\n'))
+  )
+)
+
 export const JSONValueParser = pipe(
   JSONStringParser as P.Parser<string, JSONValue>,
   P.alt((): P.Parser<string, JSONValue> => JSONNumberParser),
@@ -103,15 +116,8 @@ export const JSONValueParser = pipe(
       JSONBooleanParser as P.Parser<string, JSONValue>
   ),
   P.alt((): P.Parser<string, JSONValue> => JSONNullParser),
-  P.alt((): P.Parser<string, JSONValue> => JSONObjectParser)
-  // P.alt((): P.Parser<string, JSONValue> => JSONArrayParser)
-)
-
-const Trimmer = C.many(
-  pipe(
-    C.space,
-    P.alt(() => C.char('\n'))
-  )
+  P.alt((): P.Parser<string, JSONValue> => JSONObjectParser),
+  P.alt((): P.Parser<string, JSONValue> => JSONArrayParser)
 )
 
 export const JSONObjectParser = pipe(
@@ -131,7 +137,21 @@ export const JSONObjectParser = pipe(
   P.bind('value', () => JSONValueParser),
   P.apFirst(Trimmer),
   P.apFirst(C.char('}')),
+  P.apFirst(Trimmer),
   P.map((data): JSONObject => ({ _tag: 'object', ...data }))
 )
 
-export const JSONArrayParser = pipe(C.char(''))
+export const JSONArrayParser = pipe(
+  C.char('['),
+  P.apFirst(Trimmer),
+  P.apSecond(
+    P.sepBy(
+      pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
+      JSONValueParser
+    )
+  ),
+  P.apFirst(Trimmer),
+  P.apFirst(C.char(']')),
+  P.apFirst(Trimmer),
+  P.map((value): JSONArray => ({ _tag: 'array', value }))
+)

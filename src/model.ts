@@ -6,7 +6,7 @@ export type JSONObject = {
 
 export type JSONArray = {
   _tag: 'array'
-  value: JSON[]
+  value: JSONValue[]
 }
 
 export type JSONString = {
