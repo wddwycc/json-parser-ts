@@ -1,7 +1,9 @@
 import * as assert from 'assert'
-import { pipe } from 'fp-ts/lib/function'
-import * as J from '../src'
+import * as A from 'fp-ts/lib/Array'
 import * as E from 'fp-ts/lib/Either'
+import { pipe } from 'fp-ts/lib/function'
+
+import * as J from '../src'
 
 const exampleJSON1 = `
 {
@@ -37,12 +39,15 @@ const exampleJSON2 = `
 `
 
 describe('Test interfaces', () => {
-  it('example1', () => {
-    const res = pipe(J.parse(exampleJSON1), E.map(J.flatten))
-    assert.deepStrictEqual(res, E.right({ book: [1, 2, 3] }))
-  })
-  it('example2', () => {
-    console.log(J.parse(exampleJSON2))
-    assert.strictEqual(pipe(J.parse(exampleJSON2), E.isRight), true)
+  it('test parse', () => {
+    pipe(
+      [exampleJSON1, exampleJSON2],
+      A.map(jsonStr => {
+        assert.deepStrictEqual(
+          pipe(J.parse(jsonStr), E.map(J.flatten)),
+          E.right(JSON.parse(jsonStr))
+        )
+      })
+    )
   })
 })
