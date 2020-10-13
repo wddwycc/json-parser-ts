@@ -36,7 +36,7 @@ const exampleJSON2 = `
 }
 `
 
-describe('Interfaces', () => {
+describe('Test interfaces', () => {
   it('example1', () => {
     const res = pipe(J.parse(exampleJSON1), E.map(J.flatten))
     assert.deepStrictEqual(res, E.right({ book: [1, 2, 3] }))

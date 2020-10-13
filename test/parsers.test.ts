@@ -11,7 +11,7 @@ import {
 } from '../src/parsers'
 import { runParser } from '../src/utils'
 
-describe('', () => {
+describe('Test parsers', () => {
   it('JSONStringParser', () => {
     assert.deepStrictEqual(
       runParser(JSONStringParser, '"hello world"'),
