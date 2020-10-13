@@ -4,15 +4,14 @@ import { Parser } from 'parser-ts/lib/Parser'
 import { JSONString } from './model'
 
 /**
- * Backspace is replaced with \b
- * Form feed is replaced with \f
- * Newline is replaced with \n
- * Carriage return is replaced with \r
- * Tab is replaced with \t
- * Double quote is replaced with \"
- * Backslash is replaced with \\
+ * * Backspace is replaced with `\b`
+ * * Form feed is replaced with `\f`
+ * * Newline is replaced with `\n`
+ * * Carriage return is replaced with `\r`
+ * * Tab is replaced with `\t`
+ * * Double quote is replaced with `\"`
+ * * Backslash is replaced with `\\`
  */
-
 export const JSONStringEscapesParser = pipe(
   C.char('\\'),
   P.chain(() =>
@@ -67,8 +66,7 @@ export const JSONStringParser: Parser<string, JSONString> = pipe(
   P.chain(() =>
     C.many(
       pipe(
-        C.alphanum,
-        P.alt(() => C.space),
+        C.notOneOf('"\\'),
         P.alt(() => JSONStringEscapesParser)
       )
     )
