@@ -30,7 +30,7 @@ export type JSONValue =
 
 The lib also provides a `flatten` function to transform nested tagged union back to flat JavaScript object.
 
-```
+```typescript
 import * J from 'json-parser-ts'
 import { pipe } from 'fp-ts/lib/function'
 import * as E from 'fp-ts/lib/Either'
