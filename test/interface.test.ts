@@ -1,28 +1,17 @@
 import * as assert from 'assert'
+import { pipe } from 'fp-ts/lib/function'
 import * as J from '../src'
+import * as E from 'fp-ts/lib/Either'
 
 const exampleJSON = `
 {
-  "book": [
-     {
-        "id": "01",
-        "language": "Java",
-        "edition": "third",
-        "author": "Herbert Schildt"
-     },
-     {
-        "id": "07",
-        "language": "C++",
-        "edition": "second",
-        "author": "E.Balagurusamy"
-     }
-  ]
+  "book": [ 1,2,3 ]
 }
 `
 
 describe('Interfaces', () => {
   it('parse', () => {
-    console.log(JSON.stringify(J.parse(exampleJSON)))
-    assert.strictEqual(true, true)
+    const res = pipe(J.parse(exampleJSON), E.map(J.flatten))
+    assert.deepStrictEqual(res, E.right({ book: [1, 2, 3] }))
   })
 })

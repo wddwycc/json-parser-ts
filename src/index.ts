@@ -17,7 +17,7 @@ export const flatten = (
     case 'null':
       return null
     case 'object':
-      return { [src.key]: flatten(src) }
+      return { [src.key]: flatten(src.value) }
     case 'array':
       return src.value.map(flatten)
   }
