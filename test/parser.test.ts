@@ -1,7 +1,9 @@
-import { sum } from '../src';
+import { JSONStringParser } from '../src'
+import { runParser } from '../src/utils'
 
-describe('blah', () => {
-  it('works', () => {
-    expect(sum(1, 1)).toEqual(2);
-  });
-});
+describe('parser', () => {
+  it('it works', () => {
+    const res = runParser(JSONStringParser, '"\\\\ \\bhello world "')
+    console.log(res)
+  })
+})

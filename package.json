@@ -19,17 +19,10 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
     }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
   },
   "name": "json-parser-ts",
   "author": "duan",
@@ -44,12 +37,17 @@
       "limit": "10 KB"
     }
   ],
+  "peerDependencies": {},
+  "dependencies": {
+    "fp-ts": "^2.8.4",
+    "parser-ts": "^0.6.11"
+  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.6.0",
     "husky": "^4.3.0",
     "size-limit": "^4.6.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
-    "typescript": "^4.0.3"
+    "typescript": "^3.9.7"
   }
 }
