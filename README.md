@@ -1,5 +1,7 @@
 # json-parser-ts
 
+[![npm version](https://img.shields.io/npm/v/json-parser-ts.svg?style=flat)](https://www.npmjs.com/package/json-parser-ts)
+
 A type-safe combinator-based JSON parser.
 
 ## Install

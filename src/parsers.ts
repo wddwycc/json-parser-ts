@@ -4,6 +4,8 @@ import { char as C, parser as P, string as S } from 'parser-ts'
 import {
   JSON,
   JSONArray,
+  JSONBoolean,
+  JSONNull,
   JSONNumber,
   JSONObject,
   JSONString,
@@ -31,7 +33,7 @@ export const JSONNumberParser = pipe(
 )
 export const JSONNullParser = pipe(
   S.string('null'),
-  P.map((): JSONValue => ({ _tag: 'null' }))
+  P.map((): JSONNull => ({ _tag: 'null' }))
 )
 export const JSONBooleanParser = pipe(
   S.string('true'),
@@ -42,7 +44,7 @@ export const JSONBooleanParser = pipe(
       P.map(() => false)
     )
   ),
-  P.map((value): JSONValue => ({ _tag: 'boolean', value }))
+  P.map((value): JSONBoolean => ({ _tag: 'boolean', value }))
 )
 
 const Trimmer = C.many(
