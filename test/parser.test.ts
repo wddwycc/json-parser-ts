@@ -8,7 +8,7 @@ import {
   JSONNumberParser,
   JSONObjectParser,
   JSONStringParser
-} from '../src'
+} from '../src/parsers'
 import { runParser } from '../src/utils'
 
 describe('parser', () => {
