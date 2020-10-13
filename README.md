@@ -10,7 +10,7 @@ npm i json-parser-ts
 
 ## Interfaces
 
-```
+```typescript
 import * J from 'json-parser-ts'
 
 const res = J.parse(jsonStr)
