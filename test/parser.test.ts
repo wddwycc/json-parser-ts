@@ -5,6 +5,7 @@ import {
   JSONBooleanParser,
   JSONNullParser,
   JSONNumberParser,
+  JSONObjectParser,
   JSONStringParser
 } from '../src'
 import { runParser } from '../src/utils'
@@ -43,6 +44,16 @@ describe('parser', () => {
     assert.deepStrictEqual(
       runParser(JSONBooleanParser, 'false'),
       E.right({ _tag: 'boolean', value: false })
+    )
+  })
+  it('JSONObjectParser', () => {
+    assert.deepStrictEqual(
+      runParser(JSONObjectParser, '{\n "a": "b" \n}'),
+      E.right({
+        _tag: 'object',
+        key: 'a',
+        value: { _tag: 'string', value: 'b' }
+      })
     )
   })
 })

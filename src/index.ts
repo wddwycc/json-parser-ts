@@ -1,6 +1,7 @@
 import { pipe } from 'fp-ts/lib/function'
-import { parser as P, char as C, string as S } from 'parser-ts'
-import { JSONValue } from './model'
+import { char as C, parser as P, string as S } from 'parser-ts'
+
+import { JSONNumber, JSONObject, JSONString, JSONValue } from './model'
 
 /**
  * * Backspace is replaced with `\b`
@@ -71,12 +72,12 @@ export const JSONStringParser = pipe(
     )
   ),
   P.apFirst(C.char('"')),
-  P.map((value): JSONValue => ({ _tag: 'string', value }))
+  P.map((value): JSONString => ({ _tag: 'string', value }))
 )
 export const JSONNumberParser = pipe(
   S.float,
   P.alt(() => S.int),
-  P.map((value): JSONValue => ({ _tag: 'number', value }))
+  P.map((value): JSONNumber => ({ _tag: 'number', value }))
 )
 export const JSONNullParser = pipe(
   S.string('null'),
@@ -95,18 +96,42 @@ export const JSONBooleanParser = pipe(
 )
 
 export const JSONValueParser = pipe(
-  JSONStringParser,
-  P.alt(() => JSONNumberParser),
-  P.alt(() => JSONBooleanParser),
-  P.alt(() => JSONNullParser)
+  JSONStringParser as P.Parser<string, JSONValue>,
+  P.alt((): P.Parser<string, JSONValue> => JSONNumberParser),
+  P.alt(
+    (): P.Parser<string, JSONValue> =>
+      JSONBooleanParser as P.Parser<string, JSONValue>
+  ),
+  P.alt((): P.Parser<string, JSONValue> => JSONNullParser),
+  P.alt((): P.Parser<string, JSONValue> => JSONObjectParser)
+  // P.alt((): P.Parser<string, JSONValue> => JSONArrayParser)
+)
+
+const Trimmer = C.many(
+  pipe(
+    C.space,
+    P.alt(() => C.char('\n'))
+  )
+)
+
+export const JSONObjectParser = pipe(
+  Trimmer,
+  P.apFirst(C.char('{')),
+  P.apFirst(Trimmer),
+  P.apSecond(
+    pipe(
+      JSONStringParser,
+      P.map(a => a.value)
+    )
+  ),
+  P.bindTo('key'),
+  P.apFirst(Trimmer),
+  P.apFirst(C.char(':')),
+  P.apFirst(Trimmer),
+  P.bind('value', () => JSONValueParser),
+  P.apFirst(Trimmer),
+  P.apFirst(C.char('}')),
+  P.map((data): JSONObject => ({ _tag: 'object', ...data }))
 )
 
 export const JSONArrayParser = pipe(C.char(''))
-
-// export const JSONObjectParser = pipe(C.char('{'), P.apSecond(P.many1(C.space)))
-
-// export const parse = () => {
-//   pipe(S.int)
-//   // S.int(12)
-//   // TODO
-// }
