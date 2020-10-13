@@ -8,11 +8,11 @@ export type ExtractParserRight<T> = T extends P.Parser<any, infer R> ? R : never
 
 export const runParser = <A>(
   p: P.Parser<C.Char, A>,
-  s: string
+  s: string,
 ): E.Either<ParseError<C.Char>, A> =>
   pipe(
     p(stream(s.split(''))),
-    E.map(a => a.value)
+    E.map(a => a.value),
   )
 
 /**
@@ -31,44 +31,44 @@ export const JSONStringEscapesParser = pipe(
       // impl with recursion
       pipe(
         C.char('b'),
-        P.map(() => '\b')
+        P.map(() => '\b'),
       ),
       P.alt(() =>
         pipe(
           C.char('f'),
-          P.map(() => '\f')
-        )
+          P.map(() => '\f'),
+        ),
       ),
       P.alt(() =>
         pipe(
           C.char('n'),
-          P.map(() => '\n')
-        )
+          P.map(() => '\n'),
+        ),
       ),
       P.alt(() =>
         pipe(
           C.char('r'),
-          P.map(() => '\r')
-        )
+          P.map(() => '\r'),
+        ),
       ),
       P.alt(() =>
         pipe(
           C.char('t'),
-          P.map(() => '\t')
-        )
+          P.map(() => '\t'),
+        ),
       ),
       P.alt(() =>
         pipe(
           C.char('"'),
-          P.map(() => '"')
-        )
+          P.map(() => '"'),
+        ),
       ),
       P.alt(() =>
         pipe(
           C.char('\\'),
-          P.map(() => '\\')
-        )
-      )
-    )
-  )
+          P.map(() => '\\'),
+        ),
+      ),
+    ),
+  ),
 )

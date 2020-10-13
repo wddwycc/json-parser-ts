@@ -9,7 +9,7 @@ import {
   JSONNumber,
   JSONObject,
   JSONString,
-  JSONValue
+  JSONValue,
 } from './model'
 import { JSONStringEscapesParser } from './utils'
 
@@ -19,21 +19,21 @@ export const JSONStringParser = pipe(
     C.many(
       pipe(
         C.notOneOf('"\\'),
-        P.alt(() => JSONStringEscapesParser)
-      )
-    )
+        P.alt(() => JSONStringEscapesParser),
+      ),
+    ),
   ),
   P.apFirst(C.char('"')),
-  P.map((value): JSONString => ({ _tag: 'string', value }))
+  P.map((value): JSONString => ({ _tag: 'string', value })),
 )
 export const JSONNumberParser = pipe(
   S.float,
   P.alt(() => S.int),
-  P.map((value): JSONNumber => ({ _tag: 'number', value }))
+  P.map((value): JSONNumber => ({ _tag: 'number', value })),
 )
 export const JSONNullParser = pipe(
   S.string('null'),
-  P.map((): JSONNull => ({ _tag: 'null' }))
+  P.map((): JSONNull => ({ _tag: 'null' })),
 )
 export const JSONBooleanParser = pipe(
   S.string('true'),
@@ -41,17 +41,17 @@ export const JSONBooleanParser = pipe(
   P.alt(() =>
     pipe(
       S.string('false'),
-      P.map(() => false)
-    )
+      P.map(() => false),
+    ),
   ),
-  P.map((value): JSONBoolean => ({ _tag: 'boolean', value }))
+  P.map((value): JSONBoolean => ({ _tag: 'boolean', value })),
 )
 
 const Trimmer = C.many(
   pipe(
     C.space,
-    P.alt(() => C.char('\n'))
-  )
+    P.alt(() => C.char('\n')),
+  ),
 )
 
 export const JSONValueParser = pipe(
@@ -60,7 +60,7 @@ export const JSONValueParser = pipe(
   P.alt((): P.Parser<string, JSONValue> => JSONBooleanParser),
   P.alt((): P.Parser<string, JSONValue> => JSONNullParser),
   P.alt((): P.Parser<string, JSONValue> => JSONObjectParser),
-  P.alt((): P.Parser<string, JSONValue> => JSONArrayParser)
+  P.alt((): P.Parser<string, JSONValue> => JSONArrayParser),
 )
 
 export const JSONObjectParser = pipe(
@@ -77,14 +77,14 @@ export const JSONObjectParser = pipe(
         P.apFirst(Trimmer),
         P.apFirst(C.char(':')),
         P.apFirst(Trimmer),
-        P.bind('value', () => JSONValueParser)
-      )
-    )
+        P.bind('value', () => JSONValueParser),
+      ),
+    ),
   ),
   P.apFirst(Trimmer),
   P.apFirst(C.char('}')),
   P.apFirst(Trimmer),
-  P.map((data): JSONObject => ({ _tag: 'object', value: data }))
+  P.map((data): JSONObject => ({ _tag: 'object', value: data })),
 )
 
 export const JSONArrayParser = pipe(
@@ -94,16 +94,16 @@ export const JSONArrayParser = pipe(
   P.apSecond(
     P.sepBy(
       pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
-      JSONValueParser
-    )
+      JSONValueParser,
+    ),
   ),
   P.apFirst(Trimmer),
   P.apFirst(C.char(']')),
   P.apFirst(Trimmer),
-  P.map((value): JSONArray => ({ _tag: 'array', value }))
+  P.map((value): JSONArray => ({ _tag: 'array', value })),
 )
 
 export const JSONParser = pipe(
   JSONObjectParser as P.Parser<string, JSON>,
-  P.alt((): P.Parser<string, JSON> => JSONArrayParser)
+  P.alt((): P.Parser<string, JSON> => JSONArrayParser),
 )
