@@ -1,53 +1,22 @@
 import * as assert from 'assert'
-import * as A from 'fp-ts/lib/Array'
 import * as E from 'fp-ts/lib/Either'
 import { pipe } from 'fp-ts/lib/function'
+import fs from 'fs'
 
 import * as J from '../src'
 
-const exampleJSON1 = `
-{
-  "book": [ 1,2,3 ]
-}
-`
-const exampleJSON2 = `
-{
-  "glossary": {
-    "title": "example glossary",
-    "GlossDiv": {
-      "title": "S",
-      "GlossList": {
-        "GlossEntry": {
-          "ID": "SGML",
-          "SortAs": "SGML",
-          "GlossTerm": "Standard Generalized Markup Language",
-          "Acronym": "SGML",
-          "Abbrev": "ISO 8879:1986",
-          "GlossDef": {
-            "para": "A meta-markup language, used to create markup languages such as DocBook.",
-            "GlossSeeAlso": [
-              "GML",
-              "XML"
-            ]
-          },
-          "GlossSee": "markup"
-        }
-      }
-    }
-  }
-}
-`
+const BASE_DIR = './test/dataset'
 
 describe('Test interfaces', () => {
-  it('test parse', () => {
-    pipe(
-      [exampleJSON1, exampleJSON2],
-      A.map(jsonStr => {
-        assert.deepStrictEqual(
-          pipe(J.parse(jsonStr), E.map(J.flatten)),
-          E.right(JSON.parse(jsonStr)),
-        )
-      }),
-    )
-  })
+  const files = fs.readdirSync(BASE_DIR)
+  for (const file of files) {
+    if (!file.startsWith('y_')) continue
+    const jsonStr = fs.readFileSync(`./test/dataset/${file}`, 'utf-8')
+    it(file, () => {
+      assert.deepStrictEqual(
+        pipe(J.parse(jsonStr), E.map(J.flatten)),
+        E.right(JSON.parse(jsonStr)),
+      )
+    })
+  }
 })
