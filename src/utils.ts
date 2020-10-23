@@ -16,65 +16,60 @@ export const runParser = <A>(
   )
 
 /**
+ * * Double quote is replaced with `\"`
+ * * Backslash is replaced with `\\`
  * * Backspace is replaced with `\b`
  * * Form feed is replaced with `\f`
  * * Newline is replaced with `\n`
  * * Carriage return is replaced with `\r`
  * * Tab is replaced with `\t`
- * * Double quote is replaced with `\"`
- * * Backslash is replaced with `\\`
+ * * Unicode `\u0000`
  */
 export const JSONStringEscapesParser = pipe(
-  C.char('\\'),
-  P.chain(() =>
+  pipe(
+    S.string('\\b'),
+    P.map(() => '\b'),
+  ),
+  P.alt(() =>
     pipe(
-      // impl with recursion
-      pipe(
-        C.char('b'),
-        P.map(() => '\b'),
-      ),
-      P.alt(() =>
-        pipe(
-          C.char('f'),
-          P.map(() => '\f'),
-        ),
-      ),
-      P.alt(() =>
-        pipe(
-          C.char('n'),
-          P.map(() => '\n'),
-        ),
-      ),
-      P.alt(() =>
-        pipe(
-          C.char('r'),
-          P.map(() => '\r'),
-        ),
-      ),
-      P.alt(() =>
-        pipe(
-          C.char('t'),
-          P.map(() => '\t'),
-        ),
-      ),
-      P.alt(() =>
-        pipe(
-          C.char('"'),
-          P.map(() => '"'),
-        ),
-      ),
-      P.alt(() =>
-        pipe(
-          C.char('\\'),
-          P.map(() => '\\'),
-        ),
-      ),
-      P.alt(() =>
-        pipe(
-          S.string('u0000'),
-          P.map(() => '\u0000'),
-        ),
-      ),
+      S.string('\\f'),
+      P.map(() => '\f'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\n'),
+      P.map(() => '\n'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\r'),
+      P.map(() => '\r'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\t'),
+      P.map(() => '\t'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\"'),
+      P.map(() => '"'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\\\'),
+      P.map(() => '\\'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\u0000'),
+      P.map(() => '\u0000'),
     ),
   ),
 )
