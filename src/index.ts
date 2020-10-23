@@ -28,7 +28,7 @@ export const flatten = (
         O.map(
           flow(
             NEA.groupBy(a => a.key),
-            R.map(NEA.head),
+            R.map(NEA.last),
             R.map(a => flatten(a.value)),
           ),
         ),
