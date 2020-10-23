@@ -7,11 +7,11 @@ import * as J from '../src'
 
 const BASE_DIR = './test/dataset'
 
-describe('Test interfaces', () => {
+describe('RFC 8259', () => {
   const files = fs.readdirSync(BASE_DIR)
   for (const file of files) {
     if (!file.startsWith('y_')) continue
-    const jsonStr = fs.readFileSync(`./test/dataset/${file}`, 'utf-8')
+    const jsonStr = fs.readFileSync(`${BASE_DIR}/${file}`, 'utf-8')
     it(file, () => {
       assert.deepStrictEqual(
         pipe(J.parse(jsonStr), E.map(J.flatten)),
