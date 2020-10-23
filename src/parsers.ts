@@ -27,10 +27,19 @@ export const JSONStringParser = pipe(
   P.map((value): JSONString => ({ _tag: 'string', value })),
 )
 export const JSONNumberParser = pipe(
-  S.float,
-  P.alt(() => S.int),
+  S.fold([
+    S.maybe(C.char('-')),
+    pipe(
+      C.char('0'),
+      P.alt(() => S.fold([C.oneOf('123456789'), C.many(C.digit)])),
+    ),
+    S.maybe(S.fold([C.char('.'), C.many1(C.digit)])),
+    S.maybe(S.fold([C.oneOf('Ee'), S.maybe(C.oneOf('+-')), C.many1(C.digit)])),
+  ]),
+  P.map(s => +s),
   P.map((value): JSONNumber => ({ _tag: 'number', value })),
 )
+
 export const JSONNullParser = pipe(
   S.string('null'),
   P.map((): JSONNull => ({ _tag: 'null' })),
