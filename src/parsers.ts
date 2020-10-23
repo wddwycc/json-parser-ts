@@ -62,7 +62,7 @@ const Trimmer = C.many(
   ),
 )
 
-export const JSONParser = pipe(
+export const JSONValueParser = pipe(
   JSONStringParser as P.Parser<string, JSON>,
   P.alt((): P.Parser<string, JSON> => JSONNumberParser),
   P.alt((): P.Parser<string, JSON> => JSONBooleanParser),
@@ -85,7 +85,7 @@ export const JSONObjectParser = pipe(
         P.apFirst(Trimmer),
         P.apFirst(C.char(':')),
         P.apFirst(Trimmer),
-        P.bind('value', () => JSONParser),
+        P.bind('value', () => JSONValueParser),
       ),
     ),
   ),
@@ -102,7 +102,7 @@ export const JSONArrayParser = pipe(
   P.apSecond(
     P.sepBy(
       pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
-      JSONParser,
+      JSONValueParser,
     ),
   ),
   P.apFirst(Trimmer),
@@ -110,3 +110,5 @@ export const JSONArrayParser = pipe(
   P.apFirst(Trimmer),
   P.map((value): JSONArray => ({ _tag: 'array', value })),
 )
+
+export const JSONParser = pipe(JSONValueParser, P.apFirst(P.eof()))

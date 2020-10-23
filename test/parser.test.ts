@@ -10,13 +10,19 @@ const BASE_DIR = './test/dataset'
 describe('RFC 8259', () => {
   const files = fs.readdirSync(BASE_DIR)
   for (const file of files) {
-    if (!file.startsWith('y_')) continue
     const jsonStr = fs.readFileSync(`${BASE_DIR}/${file}`, 'utf-8')
-    it(file, () => {
-      assert.deepStrictEqual(
-        pipe(J.parse(jsonStr), E.map(J.flatten)),
-        E.right(JSON.parse(jsonStr)),
-      )
-    })
+    if (file.startsWith('y_')) {
+      it(file, () => {
+        assert.deepStrictEqual(
+          pipe(J.parse(jsonStr), E.map(J.flatten)),
+          E.right(JSON.parse(jsonStr)),
+        )
+      })
+    }
+    if (file.startsWith('n_')) {
+      it(file, () => {
+        assert.strictEqual(pipe(J.parse(jsonStr), E.isLeft), true)
+      })
+    }
   }
 })
