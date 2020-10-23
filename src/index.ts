@@ -1,13 +1,37 @@
-import { flow, pipe } from 'fp-ts/lib/function'
+import * as E from 'fp-ts/lib/Either'
+import { flow, identity, pipe } from 'fp-ts/lib/function'
 import * as NEA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
 import * as R from 'fp-ts/lib/Record'
+import { char as C } from 'parser-ts'
+import { ParseError } from 'parser-ts/lib/ParseResult'
 
 import { JSON } from './model'
 import { JSONParser } from './parsers'
 import { runParser } from './utils'
 
-export const parse = (src: string) => runParser(JSONParser, src)
+export type Err =
+  | {
+      type: 'jsErr'
+      value: unknown
+    }
+  | {
+      type: 'parseErr'
+      value: ParseError<C.Char>
+    }
+
+export const parse = (src: string) =>
+  pipe(
+    E.tryCatch(
+      () =>
+        pipe(
+          runParser(JSONParser, src),
+          E.mapLeft((value): Err => ({ type: 'parseErr', value })),
+        ),
+      (value): Err => ({ type: 'jsErr', value }),
+    ),
+    E.chain(identity),
+  )
 
 export const flatten = (
   src: JSON,

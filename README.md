@@ -19,7 +19,7 @@ import * as J from 'json-parser-ts'
 const res = J.parse(jsonStr)
 ```
 
-The parse function returns `E.Either<string, JSON>`, while JSON is parsed as nested tagged union, see [model.ts](https://github.com/wddwycc/json-parser-ts/blob/main/src/model.ts) for detail
+The parse function returns `E.Either<Err, JSON>`, while JSON is parsed as nested tagged union, see [model.ts](https://github.com/wddwycc/json-parser-ts/blob/main/src/model.ts) for detail
 
 ```typescript
 export type JSON =
