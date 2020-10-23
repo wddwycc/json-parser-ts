@@ -3,14 +3,14 @@ import * as NEA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
 import * as R from 'fp-ts/lib/Record'
 
-import { JSONValue } from './model'
+import { JSON } from './model'
 import { JSONParser } from './parsers'
 import { runParser } from './utils'
 
 export const parse = (src: string) => runParser(JSONParser, src)
 
 export const flatten = (
-  src: JSONValue,
+  src: JSON,
 ): string | number | boolean | null | object => {
   switch (src._tag) {
     case 'string':
