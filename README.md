@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/json-parser-ts.svg?style=flat)](https://www.npmjs.com/package/json-parser-ts) ![CI](https://github.com/wddwycc/json-parser-ts/workflows/CI/badge.svg)
 
-A type-safe combinator-based JSON parser.
+A type-safe combinator-based JSON parser. (it's far from RFC 8259 compliant, don't use in production)
 
 ## Install
 
@@ -33,7 +33,7 @@ export type JSONValue =
 The lib also provides a `flatten` function to transform nested tagged union back to flat JavaScript object.
 
 ```typescript
-import * J from 'json-parser-ts'
+import * as J from 'json-parser-ts'
 import { pipe } from 'fp-ts/lib/function'
 import * as E from 'fp-ts/lib/Either'
 

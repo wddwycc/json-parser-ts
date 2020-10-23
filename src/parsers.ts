@@ -106,4 +106,5 @@ export const JSONArrayParser = pipe(
 export const JSONParser = pipe(
   JSONObjectParser as P.Parser<string, JSON>,
   P.alt((): P.Parser<string, JSON> => JSONArrayParser),
+  P.apFirst(P.eof()),
 )
