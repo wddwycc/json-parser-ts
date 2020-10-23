@@ -1,6 +1,6 @@
 import * as E from 'fp-ts/lib/Either'
 import { pipe } from 'fp-ts/lib/function'
-import { char as C, parser as P } from 'parser-ts'
+import { char as C, parser as P, string as S } from 'parser-ts'
 import { ParseError } from 'parser-ts/lib/ParseResult'
 import { stream } from 'parser-ts/lib/Stream'
 
@@ -67,6 +67,12 @@ export const JSONStringEscapesParser = pipe(
         pipe(
           C.char('\\'),
           P.map(() => '\\'),
+        ),
+      ),
+      P.alt(() =>
+        pipe(
+          S.string('u0000'),
+          P.map(() => '\u0000'),
         ),
       ),
     ),

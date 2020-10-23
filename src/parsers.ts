@@ -16,7 +16,7 @@ import { JSONStringEscapesParser } from './utils'
 export const JSONStringParser = pipe(
   C.char('"'),
   P.chain(() =>
-    C.many(
+    S.many(
       pipe(
         C.notOneOf('"\\'),
         P.alt(() => JSONStringEscapesParser),
