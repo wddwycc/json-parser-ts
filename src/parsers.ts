@@ -55,12 +55,7 @@ export const JSONBooleanParser = pipe(
   P.map((value): JSONBoolean => ({ _tag: 'boolean', value })),
 )
 
-const Trimmer = C.many(
-  pipe(
-    C.space,
-    P.alt(() => C.char('\n')),
-  ),
-)
+const SpaceParser = C.many(C.oneOf(' \n'))
 
 export const JSONValueParser = pipe(
   JSONStringParser as P.Parser<string, JSON>,
@@ -72,42 +67,42 @@ export const JSONValueParser = pipe(
 )
 
 export const JSONObjectParser = pipe(
-  Trimmer,
+  SpaceParser,
   P.apFirst(C.char('{')),
-  P.apFirst(Trimmer),
+  P.apFirst(SpaceParser),
   P.apSecond(
     P.sepBy(
-      pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
+      pipe(SpaceParser, P.apFirst(C.char(',')), P.apFirst(SpaceParser)),
       pipe(
         JSONStringParser,
         P.map(a => a.value),
         P.bindTo('key'),
-        P.apFirst(Trimmer),
+        P.apFirst(SpaceParser),
         P.apFirst(C.char(':')),
-        P.apFirst(Trimmer),
+        P.apFirst(SpaceParser),
         P.bind('value', () => JSONValueParser),
       ),
     ),
   ),
-  P.apFirst(Trimmer),
+  P.apFirst(SpaceParser),
   P.apFirst(C.char('}')),
-  P.apFirst(Trimmer),
+  P.apFirst(SpaceParser),
   P.map((data): JSONObject => ({ _tag: 'object', value: data })),
 )
 
 export const JSONArrayParser = pipe(
-  Trimmer,
+  SpaceParser,
   P.apFirst(C.char('[')),
-  P.apFirst(Trimmer),
+  P.apFirst(SpaceParser),
   P.apSecond(
     P.sepBy(
-      pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
+      pipe(SpaceParser, P.apFirst(C.char(',')), P.apFirst(SpaceParser)),
       JSONValueParser,
     ),
   ),
-  P.apFirst(Trimmer),
+  P.apFirst(SpaceParser),
   P.apFirst(C.char(']')),
-  P.apFirst(Trimmer),
+  P.apFirst(SpaceParser),
   P.map((value): JSONArray => ({ _tag: 'array', value })),
 )
 
