@@ -15,6 +15,8 @@ export const runParser = <A>(
     E.map(a => a.value),
   )
 
+const hexCharParser = C.oneOf('0123456789abcdefABCDEF')
+
 /**
  * * Double quote is replaced with `\"`
  * * Backslash is replaced with `\\`
@@ -68,8 +70,11 @@ export const JSONStringEscapesParser = pipe(
   ),
   P.alt(() =>
     pipe(
-      S.string('\\u0000'),
-      P.map(() => '\u0000'),
+      S.string('\\u'),
+      P.apSecond(
+        S.fold([hexCharParser, hexCharParser, hexCharParser, hexCharParser]),
+      ),
+      P.map(src => pipe(parseInt(src, 16), String.fromCharCode)),
     ),
   ),
 )
