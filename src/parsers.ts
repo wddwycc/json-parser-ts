@@ -52,7 +52,7 @@ export const JSONStringParser = pipe(
   P.chain(() =>
     S.many(
       pipe(
-        C.notOneOf(['"', '	', '\\', ...CTRL_CHAR_SET].join('')),
+        C.notOneOf(['"', '\\', ...CTRL_CHAR_SET].join('')),
         P.alt(() => JSONStringEscapesParser),
       ),
     ),
