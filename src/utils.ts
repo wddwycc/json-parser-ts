@@ -29,8 +29,26 @@ const hexCharParser = C.oneOf('0123456789abcdefABCDEF')
  */
 export const JSONStringEscapesParser = pipe(
   pipe(
-    S.string('\\b'),
-    P.map(() => '\b'),
+    S.string('\\"'),
+    P.map(() => '"'),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\/'),
+      P.map(() => '/'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\\\'),
+      P.map(() => '\\'),
+    ),
+  ),
+  P.alt(() =>
+    pipe(
+      S.string('\\b'),
+      P.map(() => '\b'),
+    ),
   ),
   P.alt(() =>
     pipe(
@@ -54,18 +72,6 @@ export const JSONStringEscapesParser = pipe(
     pipe(
       S.string('\\t'),
       P.map(() => '\t'),
-    ),
-  ),
-  P.alt(() =>
-    pipe(
-      S.string('\\"'),
-      P.map(() => '"'),
-    ),
-  ),
-  P.alt(() =>
-    pipe(
-      S.string('\\\\'),
-      P.map(() => '\\'),
     ),
   ),
   P.alt(() =>
