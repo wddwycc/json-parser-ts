@@ -9,7 +9,6 @@ import {
   JSONNumber,
   JSONObject,
   JSONString,
-  JSONValue,
 } from './model'
 import { JSONStringEscapesParser } from './utils'
 
@@ -63,13 +62,13 @@ const Trimmer = C.many(
   ),
 )
 
-export const JSONValueParser = pipe(
-  JSONStringParser as P.Parser<string, JSONValue>,
-  P.alt((): P.Parser<string, JSONValue> => JSONNumberParser),
-  P.alt((): P.Parser<string, JSONValue> => JSONBooleanParser),
-  P.alt((): P.Parser<string, JSONValue> => JSONNullParser),
-  P.alt((): P.Parser<string, JSONValue> => JSONObjectParser),
-  P.alt((): P.Parser<string, JSONValue> => JSONArrayParser),
+export const JSONParser = pipe(
+  JSONStringParser as P.Parser<string, JSON>,
+  P.alt((): P.Parser<string, JSON> => JSONNumberParser),
+  P.alt((): P.Parser<string, JSON> => JSONBooleanParser),
+  P.alt((): P.Parser<string, JSON> => JSONNullParser),
+  P.alt((): P.Parser<string, JSON> => JSONObjectParser),
+  P.alt((): P.Parser<string, JSON> => JSONArrayParser),
 )
 
 export const JSONObjectParser = pipe(
@@ -86,7 +85,7 @@ export const JSONObjectParser = pipe(
         P.apFirst(Trimmer),
         P.apFirst(C.char(':')),
         P.apFirst(Trimmer),
-        P.bind('value', () => JSONValueParser),
+        P.bind('value', () => JSONParser),
       ),
     ),
   ),
@@ -103,17 +102,11 @@ export const JSONArrayParser = pipe(
   P.apSecond(
     P.sepBy(
       pipe(Trimmer, P.apFirst(C.char(',')), P.apFirst(Trimmer)),
-      JSONValueParser,
+      JSONParser,
     ),
   ),
   P.apFirst(Trimmer),
   P.apFirst(C.char(']')),
   P.apFirst(Trimmer),
   P.map((value): JSONArray => ({ _tag: 'array', value })),
-)
-
-export const JSONParser = pipe(
-  JSONObjectParser as P.Parser<string, JSON>,
-  P.alt((): P.Parser<string, JSON> => JSONArrayParser),
-  P.apFirst(P.eof()),
 )

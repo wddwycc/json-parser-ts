@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/json-parser-ts.svg?style=flat)](https://www.npmjs.com/package/json-parser-ts) ![CI](https://github.com/wddwycc/json-parser-ts/workflows/CI/badge.svg)
 
-A type-safe combinator-based JSON parser. (it's far from RFC 8259 compliant, don't use in production)
+A type-safe combinator-based JSON parser. It's RFC 8259 compliant and well tested with dataset from [JSONTestSuite](https://github.com/nst/JSONTestSuite)
 
 ## Install
 
@@ -21,7 +21,7 @@ const res = J.parse(jsonStr)
 The parse function returns `E.Either<string, JSON>`, while JSON is parsed as nested tagged union, see [model.ts](https://github.com/wddwycc/json-parser-ts/blob/main/src/model.ts) for detail
 
 ```typescript
-export type JSONValue =
+export type JSON =
   | JSONObject
   | JSONArray
   | JSONString

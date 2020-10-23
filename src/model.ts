@@ -2,13 +2,13 @@ export type JSONObject = {
   _tag: 'object'
   value: {
     key: string
-    value: JSONValue
+    value: JSON
   }[]
 }
 
 export type JSONArray = {
   _tag: 'array'
-  value: JSONValue[]
+  value: JSON[]
 }
 
 export type JSONString = {
@@ -30,11 +30,10 @@ export type JSONNull = {
   _tag: 'null'
 }
 
-export type JSONValue =
+export type JSON =
   | JSONObject
   | JSONArray
   | JSONString
   | JSONNumber
   | JSONBoolean
   | JSONNull
-export type JSON = JSONObject | JSONArray
