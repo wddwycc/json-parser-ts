@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/json-parser-ts.svg?style=flat)](https://www.npmjs.com/package/json-parser-ts) [![CI](https://github.com/wddwycc/json-parser-ts/workflows/CI/badge.svg)](https://github.com/wddwycc/json-parser-ts/actions?query=workflow%3ACI)
 
-A type-safe combinator-based native JSON parser.  
+A combinator-based JSON parser.  
 It's [RFC 8259](https://tools.ietf.org/html/rfc8259) compliant, well tested using dataset from [JSONTestSuite](https://github.com/nst/JSONTestSuite)
 
 ## Install
